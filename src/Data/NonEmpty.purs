@@ -161,10 +161,9 @@ instance traversableWithIndexNonEmpty
     NonEmpty <$> f Nothing a <*> traverseWithIndex (f <<< Just) fa
 
 instance foldable1NonEmpty :: Foldable f => Foldable1 (NonEmpty f) where
-  fold1 = foldMap1 identity
-  foldMap1 f (a :| fa) = foldl (\s a1 -> s <> f a1) (f a) fa
   foldr1 f (a :| fa) = maybe a (f a) $ foldr (\a1 -> Just <<< maybe a1 (f a1)) Nothing fa
   foldl1 f (a :| fa) = foldl f a fa
+  foldMap1 f (a :| fa) = foldl (\s a1 -> s <> f a1) (f a) fa
 
 instance unfoldable1NonEmpty :: Unfoldable f => Unfoldable1 (NonEmpty f) where
   unfoldr1 f b = uncurry (:|) $ unfoldr (map f) <$> f b
